@@ -1,0 +1,32 @@
+.vscode/
+UI Mockup.png
+
+# Dependencies
+node_modules/
+Frontend-client/node_modules/
+Backend-server/node_modules/
+
+# Build output
+dist/
+Frontend-client/dist/
+Backend-server/.vercel/
+Frontend-client/.vercel/
+
+# Environment files
+.env
+.env.*
+Frontend-client/.env
+Frontend-client/.env.*
+Backend-server/.env
+Backend-server/.env.*
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Runtime uploads
+Backend-server/uploads/

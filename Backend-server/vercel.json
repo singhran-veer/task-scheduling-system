@@ -1,0 +1,30 @@
+{
+    "version": 2,
+    "builds": [
+        {
+            "src": "index.js",
+            "use": "@vercel/node"
+        },
+        {
+            "src": "views/staticFiles/**",
+            "use": "@vercel/static"
+        }
+    ],
+    "routes": [
+        {
+            "src": "/homeStyles.css",
+            "dest": "/views/staticFiles/homeStyles.css"
+        },
+        {
+            "src": "/notFoundStyles.css",
+            "dest": "/views/staticFiles/notFoundStyles.css"
+        },
+        {
+            "src": "/(.*)",
+            "dest": "/index.js"
+        }
+    ],
+    "env": {
+        "NODE_ENV": "production"
+    }
+}

@@ -1,0 +1,183 @@
+/* ===================================== Not Found Page Styles =====================================*/
+
+.NotFound-Page {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.not-found-content {
+    text-align: center;
+    max-width: 600px;
+    width: 100%;
+    margin: 60px auto;
+    background: var(--white-bg);
+    border-radius: 12px;
+    padding: 3rem 2rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    border: 1px solid var(--gray-bg-l);
+}
+
+/* Error Visual Section */
+.error-visual {
+    margin-bottom: 2rem;
+}
+
+.error-code {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.error-number {
+    font-size: 5rem;
+    font-weight: 800;
+    color: var(--green-color);
+    line-height: 1;
+    text-shadow: 0 2px 4px rgba(6, 172, 172, 0.2);
+}
+
+.error-icon {
+    font-size: 3rem;
+    color: var(--green-color);
+    animation: pulse 2s infinite;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 80px;
+    height: 80px;
+    background: var(--green-bg-light);
+    border-radius: 50%;
+    border: 3px solid var(--green-color);
+}
+
+@keyframes pulse {
+    0%,
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    50% {
+        transform: scale(1.05);
+        opacity: 0.8;
+    }
+}
+
+/* Error Message Section */
+.error-message {
+    margin-bottom: 2.5rem;
+}
+
+.error-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--gray-c-d);
+    margin-bottom: 1rem;
+    line-height: 1.2;
+}
+
+.error-description {
+    font-size: 1.1rem;
+    color: var(--gray-c);
+    line-height: 1.6;
+    margin: 0;
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+/* Action Buttons */
+.error-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+}
+
+/* Help Section */
+.help-section {
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--gray-bg-l);
+}
+
+.help-text {
+    color: var(--gray-c);
+    font-size: 0.95rem;
+    margin: 0;
+    line-height: 1.5;
+}
+
+.help-link {
+    color: var(--green-color);
+    text-decoration: none;
+    font-weight: 600;
+    transition: var(--trans-3);
+}
+
+.help-link:hover {
+    color: var(--green-color-d);
+    text-decoration: underline;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .not-found-content {
+        padding: 2rem 1.5rem;
+        margin: 1rem auto;
+    }
+
+    .error-number {
+        font-size: 4rem;
+    }
+
+    .error-icon {
+        font-size: 2.5rem;
+        width: 60px;
+        height: 60px;
+    }
+
+    .error-title {
+        font-size: 1.75rem;
+    }
+
+    .error-description {
+        font-size: 1rem;
+    }
+
+    .error-actions {
+        flex-direction: column;
+        align-items: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .NotFound-Page {
+        padding: 1rem 0;
+    }
+
+    .not-found-content {
+        padding: 1.5rem 1rem;
+        margin: 0.5rem auto;
+    }
+
+    .error-number {
+        font-size: 3rem;
+    }
+
+    .error-icon {
+        font-size: 2rem;
+        width: 50px;
+        height: 50px;
+    }
+
+    .error-title {
+        font-size: 1.5rem;
+    }
+
+    .error-description {
+        font-size: 0.95rem;
+    }
+}

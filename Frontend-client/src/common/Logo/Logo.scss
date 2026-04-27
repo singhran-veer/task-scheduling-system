@@ -1,0 +1,14 @@
+.logo-wraper {
+    .logo-mark {
+        background: transparent !important;
+        box-shadow: 0 10px 22px rgba(15, 23, 42, 0.08);
+        overflow: hidden;
+    }
+
+    .logo-image {
+        width: 64px;
+        height: 64px;
+        display: block;
+        border-radius: 12px;
+    }
+}

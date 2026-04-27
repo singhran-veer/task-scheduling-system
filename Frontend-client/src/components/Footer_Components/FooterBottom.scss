@@ -1,0 +1,53 @@
+/* ===================================== Footer Bottom Styles =====================================*/
+
+.footer-bottom {
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    padding-top: 1rem;
+}
+
+.footer-bottom-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+
+    p {
+        margin: 0;
+        font-size: 0.85rem;
+        color: rgba(255, 255, 255, 0.75);
+    }
+
+    .copyright {
+        strong {
+            color: var(--fixed-white-c);
+            font-weight: 600;
+        }
+    }
+
+    .developer-credit {
+        .developer-link {
+            color: var(--blue-c);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .footer-bottom-content {
+        flex-direction: column;
+        text-align: center;
+        gap: 0.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .footer-bottom-content {
+        p {
+            font-size: 0.8rem;
+        }
+    }
+}
