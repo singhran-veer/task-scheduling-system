@@ -76,17 +76,22 @@ export interface PaginationArrowProps {
     direction: "previous" | "next";
     disabled: boolean;
     onClick: () => void;
+    title?: string;
 }
 
 export interface PaginationButtonProps {
     active?: boolean;
+    isActive?: boolean;
     disabled?: boolean;
     onClick?: () => void;
     children: ReactNode;
+    title?: string;
+    className?: string;
 }
 
 export interface PaginationNumbersProps {
-    currentPage: number;
+    currentPage?: number;
+    pageNumber?: number;
     totalPages: number;
     onPageClick: (page: number) => void;
 }
@@ -97,6 +102,8 @@ export interface PaginationControlsProps {
     hasNextPage: boolean;
     hasPreviousPage: boolean;
     onPageClick: (page: number) => void;
+    onPrevious: () => void;
+    onNext: () => void;
 }
 
 export interface MachineRow extends Record<string, unknown> {
@@ -429,11 +436,17 @@ export interface UseGetDriverDetailsProps {
 }
 
 export interface ContactMapProps extends Record<string, unknown> {
-    [key: string]: unknown;
+    title?: string;
+    src?: string;
+    className?: string;
 }
 
 export interface ContactInfoProps extends Record<string, unknown> {
-    [key: string]: unknown;
+    location?: string;
+    email?: string;
+    whatsapp?: string;
+    linkedin?: string;
+    facebook?: string;
 }
 
 export interface StatsCardProps extends Record<string, unknown> {
@@ -481,6 +494,10 @@ export interface DriverStatus extends Record<string, unknown> {
 export interface SectionHeaderProps {
     title: string;
     subtitle?: string;
+    to?: string;
+    label?: string;
+    count?: number;
+    countColor?: "blue" | "green" | "purple" | "red" | "yellow" | "gray";
 }
 
 export interface DriverDocumentsProps extends Record<string, unknown> {

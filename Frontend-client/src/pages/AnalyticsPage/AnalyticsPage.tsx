@@ -4,7 +4,9 @@ import AnimatedPage from "../../common/Animations/AnimatedPage/AnimatedPage";
 import ErrorMessage from "../../components/ErrorMessage/ErrorMessage";
 import LoadingSpinner from "../../components/LoadingSpinner/LoadingSpinner";
 import type { MachineRow, TaskRow } from "../../common/Types/Interfaces";
-import useGetActivityTimeline from "../../utils/hooks/api/useGetActivityTimeline";
+import useGetActivityTimeline, {
+    type ActivityTimelineItem,
+} from "../../utils/hooks/api/useGetActivityTimeline";
 import useGetAllMachines from "../../utils/hooks/api/useGetAllMachines";
 import useGetAllTasks from "../../utils/hooks/api/useGetAllTasks";
 import "./AnalyticsPage.scss";
@@ -102,9 +104,9 @@ const AnalyticsPage = () => {
         error: activityError,
     } = useGetActivityTimeline(200);
 
-    const tasks = tasksResponse?.data || [];
-    const machines = machinesResponse?.data || [];
-    const activity = activityResponse?.data || [];
+    const tasks: TaskRow[] = tasksResponse?.data || [];
+    const machines: MachineRow[] = machinesResponse?.data || [];
+    const activity: ActivityTimelineItem[] = activityResponse?.data || [];
 
     const taskStatusData = useMemo(() => buildTaskStatusData(tasks), [tasks]);
     const machineStatusData = useMemo(
@@ -151,15 +153,18 @@ const AnalyticsPage = () => {
             : 0;
 
     const totalWorkingTime = machines.reduce(
-        (sum, machine) => sum + Number(machine.total_working_time || 0),
+        (sum: number, machine: MachineRow) =>
+            sum + Number(machine.total_working_time || 0),
         0
     );
     const totalIdleTime = machines.reduce(
-        (sum, machine) => sum + Number(machine.total_idle_time || 0),
+        (sum: number, machine: MachineRow) =>
+            sum + Number(machine.total_idle_time || 0),
         0
     );
     const totalMaintenanceTime = machines.reduce(
-        (sum, machine) => sum + Number(machine.total_maintenance_time || 0),
+        (sum: number, machine: MachineRow) =>
+            sum + Number(machine.total_maintenance_time || 0),
         0
     );
     const utilizationRate =

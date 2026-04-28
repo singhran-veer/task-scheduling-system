@@ -29,6 +29,19 @@ const TaskDetailsPage = () => {
     const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
     const task = data || fallbackTask;
+
+    if (isLoading && !task) {
+        return <LoadingPageSpinner message="Loading task details..." />;
+    }
+
+    if (error && !task) {
+        return <div className="p-6 text-red-500">{error}</div>;
+    }
+
+    if (!task) {
+        return <div className="p-6">Task not found</div>;
+    }
+
     const currentMachineId =
         task.status === "completed" ? null : task.assignedMachine_id;
     const previousMachineId =
@@ -47,7 +60,9 @@ const TaskDetailsPage = () => {
             label: "Task completed",
             time:
                 task.completed_at ||
-                (task.status === "completed" ? task.updated_at || task.created_at : undefined),
+                (task.status === "completed"
+                    ? task.updated_at || task.created_at
+                    : undefined),
         },
         { label: "Task updated", time: task.updated_at },
     ].filter((item, index, array) => {
@@ -59,18 +74,6 @@ const TaskDetailsPage = () => {
             ) === index
         );
     });
-
-    if (isLoading && !task) {
-        return <LoadingPageSpinner message="Loading task details..." />;
-    }
-
-    if (error && !task) {
-        return <div className="p-6 text-red-500">{error}</div>;
-    }
-
-    if (!task) {
-        return <div className="p-6">Task not found</div>;
-    }
 
     return (
         <AnimatedPage>

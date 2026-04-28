@@ -1,13 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import axiosInstance from "./axios-utils";
-
-interface MachineFilters {
-
-    machineIdOrName?: string;
-    machineType?: string;
-    status?: string;
-
-}
+import type { MachineFilters, MachineRow } from "../../../common/Types/Interfaces";
 
 interface UseGetAllMachinesProps {
 
@@ -15,6 +8,15 @@ interface UseGetAllMachinesProps {
     limit: number;
     filters?: MachineFilters;
 
+}
+
+interface MachinesApiResponse {
+    data: MachineRow[];
+    currentPage: number;
+    totalPages: number;
+    totalDocs: number;
+    hasNextPage: boolean;
+    hasPreviousPage: boolean;
 }
 
 
@@ -27,7 +29,7 @@ function useGetAllMachines({
 }: UseGetAllMachinesProps) {
 
 
-    const fetchMachines = async () => {
+    const fetchMachines = async (): Promise<MachinesApiResponse> => {
 
         try {
 
@@ -75,7 +77,7 @@ function useGetAllMachines({
             );
 
 
-            return res.data;
+            return res.data as MachinesApiResponse;
 
         }
 

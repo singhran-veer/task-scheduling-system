@@ -5,7 +5,9 @@ import AnimatedPage from "../../common/Animations/AnimatedPage/AnimatedPage";
 import ErrorMessage from "../../components/ErrorMessage/ErrorMessage";
 import LoadingSpinner from "../../components/LoadingSpinner/LoadingSpinner";
 import type { MachineRow, TaskRow } from "../../common/Types/Interfaces";
-import useGetActivityTimeline from "../../utils/hooks/api/useGetActivityTimeline";
+import useGetActivityTimeline, {
+    type ActivityTimelineItem,
+} from "../../utils/hooks/api/useGetActivityTimeline";
 import useGetAllMachines from "../../utils/hooks/api/useGetAllMachines";
 import useGetAllTasks from "../../utils/hooks/api/useGetAllTasks";
 import useRunScheduler from "../../utils/hooks/api/useRunScheduler";
@@ -84,18 +86,18 @@ const SchedulerPage = () => {
         error: activityError,
     } = useGetActivityTimeline(100);
 
-    const tasks = tasksResponse?.data || [];
-    const machines = machinesResponse?.data || [];
-    const activityItems = activityResponse?.data || [];
+    const tasks: TaskRow[] = tasksResponse?.data || [];
+    const machines: MachineRow[] = machinesResponse?.data || [];
+    const activityItems: ActivityTimelineItem[] = activityResponse?.data || [];
 
     const filteredTasks = useMemo(() => {
-        return tasks.filter((task) => {
+        return tasks.filter((task: TaskRow) => {
             return Boolean(task);
         });
     }, [tasks]);
 
     const filteredMachines = useMemo(() => {
-        return machines.filter((machine) => {
+        return machines.filter((machine: MachineRow) => {
             return Boolean(machine);
         });
     }, [machines]);

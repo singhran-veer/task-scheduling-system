@@ -5,9 +5,12 @@ import type { PaginationNumbersProps } from "../../../common/Types/Interfaces";
 
 const PaginationNumbers: React.FC<PaginationNumbersProps> = ({
     pageNumber,
+    currentPage,
     totalPages,
     onPageClick,
 }) => {
+    const activePage = pageNumber ?? currentPage ?? 1;
+
     // Generate page numbers to display - show only first, current, and last page
     const getPageNumbers = () => {
         const pages: (number | string)[] = [];
@@ -16,20 +19,20 @@ const PaginationNumbers: React.FC<PaginationNumbersProps> = ({
         pages.push(1);
 
         // Add current page if it's not first or last
-        if (pageNumber !== 1 && pageNumber !== totalPages) {
+        if (activePage !== 1 && activePage !== totalPages) {
             // Add ellipsis if there's a gap
-            if (pageNumber > 2) {
+            if (activePage > 2) {
                 pages.push("...");
             }
-            pages.push(pageNumber);
+            pages.push(activePage);
             // Add ellipsis if there's a gap to last page
-            if (pageNumber < totalPages - 1) {
+            if (activePage < totalPages - 1) {
                 pages.push("...");
             }
-        } else if (pageNumber === 1 && totalPages > 2) {
+        } else if (activePage === 1 && totalPages > 2) {
             // If on first page and more than 2 pages, show ellipsis
             pages.push("...");
-        } else if (pageNumber === totalPages && totalPages > 2) {
+        } else if (activePage === totalPages && totalPages > 2) {
             // If on last page and more than 2 pages, show ellipsis
             pages.push("...");
         }
@@ -53,7 +56,7 @@ const PaginationNumbers: React.FC<PaginationNumbersProps> = ({
                     ) : (
                         <PaginationButton
                             onClick={() => onPageClick(page as number)}
-                            isActive={page === pageNumber}
+                            isActive={page === activePage}
                         >
                             {page}
                         </PaginationButton>
