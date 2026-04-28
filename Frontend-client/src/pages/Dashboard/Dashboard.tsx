@@ -9,6 +9,29 @@ import useGetAllTasks from "../../utils/hooks/api/useGetAllTasks";
 import useGetDashboardOverview from "../../utils/hooks/api/useGetDashboardOverview";
 import "./Dashboard.scss";
 
+const emptyDashboardData = {
+    machines: {
+        total: 0,
+        idle: 0,
+        busy: 0,
+        maintenance: 0,
+        utilization_percentage: "0.00",
+    },
+    tasks: {
+        total: 0,
+        pending: 0,
+        running: 0,
+        completed: 0,
+        overdue: 0,
+    },
+    system: {
+        total_working_time: 0,
+        total_idle_time: 0,
+        total_maintenance_time: 0,
+        efficiency_percentage: "0.00",
+    },
+};
+
 const formatDateTime = (value?: string | null) => {
     if (!value) return "N/A";
 
@@ -48,6 +71,20 @@ const Dashboard = () => {
 
     const tasks = tasksResponse?.data || [];
     const activities = activityResponse?.data || [];
+    const safeDashboardData = {
+        machines: {
+            ...emptyDashboardData.machines,
+            ...(dashboardData?.machines || {}),
+        },
+        tasks: {
+            ...emptyDashboardData.tasks,
+            ...(dashboardData?.tasks || {}),
+        },
+        system: {
+            ...emptyDashboardData.system,
+            ...(dashboardData?.system || {}),
+        },
+    };
 
     const highlightedTasks = useMemo(
         () =>
@@ -64,36 +101,36 @@ const Dashboard = () => {
         [tasks]
     );
 
-    const completionRate = dashboardData?.tasks.total
-        ? (dashboardData.tasks.completed / dashboardData.tasks.total) * 100
+    const completionRate = safeDashboardData.tasks.total
+        ? (safeDashboardData.tasks.completed / safeDashboardData.tasks.total) * 100
         : 0;
-    const availabilityRate = dashboardData?.machines.total
-        ? (dashboardData.machines.idle / dashboardData.machines.total) * 100
+    const availabilityRate = safeDashboardData.machines.total
+        ? (safeDashboardData.machines.idle / safeDashboardData.machines.total) * 100
         : 0;
-    const maintenanceRate = dashboardData?.machines.total
-        ? (dashboardData.machines.maintenance / dashboardData.machines.total) * 100
+    const maintenanceRate = safeDashboardData.machines.total
+        ? (safeDashboardData.machines.maintenance / safeDashboardData.machines.total) * 100
         : 0;
 
     const overviewCards = dashboardData
         ? [
               {
                   label: "Pending Tasks",
-                  value: dashboardData.tasks.pending,
+                  value: safeDashboardData.tasks.pending,
                   tone: "amber",
               },
               {
                   label: "Running Tasks",
-                  value: dashboardData.tasks.running,
+                  value: safeDashboardData.tasks.running,
                   tone: "blue",
               },
               {
                   label: "Idle Machines",
-                  value: dashboardData.machines.idle,
+                  value: safeDashboardData.machines.idle,
                   tone: "green",
               },
               {
                   label: "Maintenance",
-                  value: dashboardData.machines.maintenance,
+                  value: safeDashboardData.machines.maintenance,
                   tone: "red",
               },
           ]
@@ -200,8 +237,8 @@ const Dashboard = () => {
                                                 <div className="dashboard-bar-meta">
                                                     <span>Task Completion</span>
                                                     <strong>
-                                                        {dashboardData?.tasks.completed || 0} /{" "}
-                                                        {dashboardData?.tasks.total || 0}
+                                                        {safeDashboardData.tasks.completed} /{" "}
+                                                        {safeDashboardData.tasks.total}
                                                     </strong>
                                                 </div>
                                                 <div className="dashboard-progress-track lg">
@@ -216,8 +253,8 @@ const Dashboard = () => {
                                                 <div className="dashboard-bar-meta">
                                                     <span>Machine Availability</span>
                                                     <strong>
-                                                        {dashboardData?.machines.idle || 0} /{" "}
-                                                        {dashboardData?.machines.total || 0}
+                                                        {safeDashboardData.machines.idle} /{" "}
+                                                        {safeDashboardData.machines.total}
                                                     </strong>
                                                 </div>
                                                 <div className="dashboard-progress-track lg">
@@ -232,25 +269,25 @@ const Dashboard = () => {
                                                 <div className="dashboard-time-card">
                                                     <span>Working Time</span>
                                                     <strong>
-                                                        {dashboardData?.system.total_working_time || 0} mins
+                                                        {safeDashboardData.system.total_working_time} mins
                                                     </strong>
                                                 </div>
                                                 <div className="dashboard-time-card">
                                                     <span>Idle Time</span>
                                                     <strong>
-                                                        {dashboardData?.system.total_idle_time || 0} mins
+                                                        {safeDashboardData.system.total_idle_time} mins
                                                     </strong>
                                                 </div>
                                                 <div className="dashboard-time-card">
                                                     <span>Maintenance Time</span>
                                                     <strong>
-                                                        {dashboardData?.system.total_maintenance_time || 0} mins
+                                                        {safeDashboardData.system.total_maintenance_time} mins
                                                     </strong>
                                                 </div>
                                                 <div className="dashboard-time-card accent">
                                                     <span>Efficiency</span>
                                                     <strong>
-                                                        {dashboardData?.system.efficiency_percentage || "0.00"}%
+                                                        {safeDashboardData.system.efficiency_percentage}%
                                                     </strong>
                                                 </div>
                                             </div>
@@ -347,21 +384,21 @@ const Dashboard = () => {
                                             <div className="dashboard-insight-card">
                                                 <span>Task Pressure</span>
                                                 <strong>
-                                                    {dashboardData?.tasks.pending || 0} task(s) still waiting
+                                                    {safeDashboardData.tasks.pending} task(s) still waiting
                                                     to start
                                                 </strong>
                                             </div>
                                             <div className="dashboard-insight-card">
                                                 <span>Machine Pressure</span>
                                                 <strong>
-                                                    {dashboardData?.machines.maintenance || 0} machine(s) are
+                                                    {safeDashboardData.machines.maintenance} machine(s) are
                                                     unavailable due to maintenance
                                                 </strong>
                                             </div>
                                             <div className="dashboard-insight-card">
                                                 <span>System State</span>
                                                 <strong>
-                                                    {Number(dashboardData?.machines.utilization_percentage || 0) >
+                                                    {Number(safeDashboardData.machines.utilization_percentage) >
                                                     70
                                                         ? "The floor is heavily utilized right now."
                                                         : "There is still machine capacity available."}
