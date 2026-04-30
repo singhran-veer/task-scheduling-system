@@ -1,5 +1,6 @@
 const express = require("express");
 const dotenv = require("dotenv");
+const connectDB = require("./utils/dbConnect");
 const startServerWithDB = require("./utils/serverManager");
 
 
@@ -131,6 +132,7 @@ app.use((req, res) => {
 // START SERVER
 // =======================
 if (process.env.NODE_ENV === "production") {
+    connectDB();
     module.exports = app;
 } else {
     startServerWithDB(app, PORT);
