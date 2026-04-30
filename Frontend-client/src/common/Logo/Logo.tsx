@@ -1,6 +1,7 @@
 import { NavLink, useNavigate } from "react-router-dom";
 import "./Logo.scss";
 import type { LogoProps } from "../Types/Interfaces";
+import brandLogo from "../../assets/brand-logo.svg";
 
 // Logo component for brand logo and name display
 const Logo = ({ disabled = false, compressSidebar }: LogoProps) => {
@@ -18,7 +19,7 @@ const Logo = ({ disabled = false, compressSidebar }: LogoProps) => {
                     }`}
                     onClick={(e) => disabled && e.preventDefault()} // Disable click if disabled
                 >
-                    <img src="/brand-logo.svg" alt="DRB logo" className="logo-image" />
+                    <img src={brandLogo} alt="Task Scheduler logo" className="logo-image" />
                 </NavLink>
             </div>
 
