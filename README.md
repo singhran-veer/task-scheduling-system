@@ -2,6 +2,10 @@
 
 Full-stack manufacturing scheduling system for managing machines, production tasks, and scheduler activity in a single interface. The project is built around a plant-floor workflow where tasks are assigned to compatible machines based on machine type, capabilities, availability, and scheduling status.
 
+##View live:
+Frontend:https://task-scheduling-system-zb2n-kc4o7h901.vercel.app/
+Backend: https://task-scheduling-system-ec5m-p8olr5k9f.vercel.app/
+
 ## Overview
 
 This application helps simulate and manage a manufacturing environment with:
@@ -210,17 +214,10 @@ Run the frontend:
 npm run dev
 ```
 
-## Current Notes
-
-- The app has been refocused around the manufacturing scheduler domain.
-- Several legacy modules have already been removed from the active flow.
-- Before final Vercel deployment, remaining active TypeScript build issues in some shared components/pages should be resolved.
 
 ## Team
 
 - `Ranveer Singh`
 - `Imran Ali`
 
-## License
 
-Developed as part of a training/project workflow. Update this section as needed for your final repository.
