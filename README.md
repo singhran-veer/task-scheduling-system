@@ -163,6 +163,22 @@ driver-scheduling-system/
 - `GET /api/analytics/machine-utilization`
 - `GET /api/analytics/system-efficiency`
 
+### Auth
+
+- `POST /api/auth/sendotp`
+- `POST /api/auth/signup`
+- `POST /api/auth/login`
+- `GET /api/auth/me`
+- `POST /api/auth/changepassword`
+
+JWT-protected routes accept:
+
+```http
+Authorization: Bearer your_jwt_token
+```
+
+Mutation routes for machines, tasks, and scheduler operations now require a verified user. `Admin` and `Manager` can create, edit, and delete machines and reset the scheduler. `Admin`, `Manager`, and `Operator` can create, edit, and delete tasks, run the scheduler, and complete tasks. Running tasks cannot be deleted until they are completed. Public signup creates `Operator` users by default; `Admin` or `Manager` signup requires `roleSignupSecret` matching `ROLE_SIGNUP_SECRET`.
+
 ## Local Setup
 
 ### Prerequisites
@@ -183,6 +199,15 @@ Create a `.env` file with:
 ```env
 PORT=6060
 DATABASE_URL=your_mongodb_connection_string
+JWT_SECRET_KEY=replace_with_a_long_random_secret
+JWT_EXPIRES_IN=2h
+ROLE_SIGNUP_SECRET=optional_secret_for_admin_or_manager_signup
+MAIL_HOST=your_smtp_host
+MAIL_PORT=587
+MAIL_SECURE=false
+MAIL_USER=your_smtp_username
+MAIL_PASSWORD=your_smtp_password_or_app_password
+MAIL_FROM=Task Scheduling System
 ```
 
 Run the server:

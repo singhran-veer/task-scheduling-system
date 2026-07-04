@@ -34,3 +34,58 @@
 		width: 4px;
 	}
 }
+
+.sidebar-account {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+
+    .account-summary {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 8px 10px;
+        border-radius: 5px;
+        background-color: var(--green-bg-light);
+    }
+
+    .account-avatar {
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        background-color: var(--white-bg);
+        object-fit: cover;
+    }
+
+    .account-name {
+        color: var(--black-c);
+        font-size: 0.9rem;
+        font-weight: 700;
+        line-height: 1.1;
+    }
+
+    .account-role {
+        color: var(--green-color);
+        font-size: 0.75rem;
+        font-weight: 700;
+    }
+
+    .sidebar-auth-btn {
+        width: 100%;
+        border: 0;
+        background: transparent;
+        color: var(--gray-c);
+        border-radius: 5px;
+        padding: 10px 12px;
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        cursor: pointer;
+        text-decoration: none;
+
+        &:hover {
+            background-color: var(--green-bg-light);
+            color: var(--green-color);
+        }
+    }
+}

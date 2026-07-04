@@ -11,3 +11,13 @@ nav.navbar {
 		color: var(--green-color);
 	}
 }
+.mobile-auth-link {
+    border: 0;
+    background: var(--green-bg);
+    color: var(--fixed-white-c);
+    border-radius: 5px;
+    padding: 8px 12px;
+    font-weight: 700;
+    text-decoration: none;
+    cursor: pointer;
+}

@@ -17,6 +17,8 @@ import PageLoader from "./components/Loader/PageLoader/PageLoader";
 import ErrorPage from "./components/ErrorDetailsPage/ErrorPage";
 import { Provider } from "react-redux";
 import store from "./utils/redux-toolkit/store";
+import PrivateRoute from "./components/Auth/PrivateRoute";
+import OpenRoute from "./components/Auth/OpenRoute";
 
 // =============================
 // LAZY PAGES (NEW SYSTEM)
@@ -24,6 +26,9 @@ import store from "./utils/redux-toolkit/store";
 
 const ContactPage = lazy(() => import("./pages/ContactPage/ContactPage"));
 const AdminPanelPage = lazy(() => import("./pages/AdminPanelPage/AdminPanelPage"));
+const LoginPage = lazy(() => import("./pages/Auth/LoginPage"));
+const SignupPage = lazy(() => import("./pages/Auth/SignupPage"));
+const VerifyEmailPage = lazy(() => import("./pages/Auth/VerifyEmailPage"));
 
 // NEW PAGES (YOU WILL CREATE THESE)
 const MachinesPage = lazy(() => import("./pages/MachinesPage/MachinesPage"));
@@ -42,6 +47,40 @@ function App() {
         {
             element: <Layout />,
             children: [
+                // =============================
+                // Auth
+                // =============================
+                {
+                    path: "/login",
+                    element: (
+                        <OpenRoute>
+                            <Suspense fallback={<PageLoader />}>
+                                <LoginPage />
+                            </Suspense>
+                        </OpenRoute>
+                    ),
+                },
+                {
+                    path: "/signup",
+                    element: (
+                        <OpenRoute>
+                            <Suspense fallback={<PageLoader />}>
+                                <SignupPage />
+                            </Suspense>
+                        </OpenRoute>
+                    ),
+                },
+                {
+                    path: "/verify-email",
+                    element: (
+                        <OpenRoute>
+                            <Suspense fallback={<PageLoader />}>
+                                <VerifyEmailPage />
+                            </Suspense>
+                        </OpenRoute>
+                    ),
+                },
+
                 // =============================
                 // Dashboard
                 // =============================
@@ -96,9 +135,11 @@ function App() {
                 {
                     path: "/scheduler",
                     element: (
-                        <Suspense fallback={<PageLoader />}>
-                            <SchedulerPage />
-                        </Suspense>
+                        <PrivateRoute>
+                            <Suspense fallback={<PageLoader />}>
+                                <SchedulerPage />
+                            </Suspense>
+                        </PrivateRoute>
                     ),
                 },
 
@@ -144,9 +185,11 @@ function App() {
                 {
                     path: "/admin-panel",
                     element: (
-                        <Suspense fallback={<PageLoader />}>
-                            <AdminPanelPage />
-                        </Suspense>
+                        <PrivateRoute allowedRoles={["Admin", "Manager"]}>
+                            <Suspense fallback={<PageLoader />}>
+                                <AdminPanelPage />
+                            </Suspense>
+                        </PrivateRoute>
                     ),
                 },
 

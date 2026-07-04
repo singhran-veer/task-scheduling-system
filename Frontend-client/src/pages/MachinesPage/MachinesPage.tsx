@@ -21,6 +21,8 @@ import useDeleteMachine from "../../utils/hooks/api/useDeleteMachine";
 import useDeleteSelectedMachines from "../../utils/hooks/api/useDeleteSelectedMachines";
 
 import type { MachineRow } from "../../common/Types/Interfaces";
+import { useAppSelector } from "../../utils/redux-toolkit/reduxHooks";
+import { canManageResources } from "../../utils/auth/permissions";
 
 interface MachineSearchBy {
     machineIdOrName: string;
@@ -29,6 +31,8 @@ interface MachineSearchBy {
 }
 
 const MachinesPage = () => {
+    const user = useAppSelector((state) => state.auth.user);
+    const canManage = canManageResources(user?.accountType);
     // ============================
     // PAGINATION
     // ============================
@@ -245,6 +249,7 @@ const MachinesPage = () => {
 
                             <MachinesControls
                                 onAddMachine={openAddMachine}
+                                canManage={canManage}
                             />
                         </section>
                     </AnimatedComponent>
@@ -264,10 +269,12 @@ const MachinesPage = () => {
                     <AnimatedComponent delay={0.3}>
                         <main className="white-bg p-4 rounded-lg shadow-md machines-table-panel">
 
-                            <BulkActionsBar
-                                selectedCount={selectedCount}
-                                onDeleteSelected={handleBulkDelete}
-                            />
+                            {canManage && (
+                                <BulkActionsBar
+                                    selectedCount={selectedCount}
+                                    onDeleteSelected={handleBulkDelete}
+                                />
+                            )}
 
                             <MachinesTable
                                 machines={machines}
@@ -283,6 +290,7 @@ const MachinesPage = () => {
                                 onDeleteMachine={handleDeleteMachine}
                                 isLoading={isLoading}
                                 error={error ?? null}
+                                canManage={canManage}
                             />
 
 
@@ -298,7 +306,7 @@ const MachinesPage = () => {
             </div>
 
             {/* Add Modal */}
-            {isAddModalOpen && (
+            {canManage && isAddModalOpen && (
                 <AddMachineModal
                     isOpen
                     onClose={closeModals}
@@ -306,7 +314,7 @@ const MachinesPage = () => {
             )}
 
             {/* Edit Modal */}
-            {isEditModalOpen && (
+            {canManage && isEditModalOpen && (
                 <EditMachineModal
                     isOpen
                     machineId={editingMachineId}

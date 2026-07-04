@@ -1,9 +1,10 @@
 const express = require("express");
 const router = express.Router();
+const { auth, isVerifiedUser, isManager } = require("../middlewares/auth");
 const Machines = require("../models/MachinesModel");
 const { getTrackedMinutesByStatus, calculateEfficiency } = require("../utils/operatingTime");
 
-router.put("/:machine_id", async (req, res) => {
+router.put("/:machine_id", auth, isVerifiedUser, isManager, async (req, res) => {
     try {
         const existingMachine = await Machines.findOne({
             machine_id: req.params.machine_id,

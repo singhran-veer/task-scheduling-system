@@ -12,6 +12,13 @@ const axiosInstance = axios.create({
 // Request interceptor
 axiosInstance.interceptors.request.use(
     (config) => {
+        const storedToken = localStorage.getItem("token");
+        const token = storedToken ? JSON.parse(storedToken) : null;
+
+        if (token) {
+            config.headers.Authorization = `Bearer ${token}`;
+        }
+
         // Add any request modifications here
         // console.log(`🚀 Making request to: ${config.baseURL}${config.url}`);
         // console.log(`📤 Request method: ${config.method?.toUpperCase()}`);

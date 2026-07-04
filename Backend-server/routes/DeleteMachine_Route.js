@@ -1,8 +1,9 @@
 const express = require("express");
 const router = express.Router();
+const { auth, isVerifiedUser, isManager } = require("../middlewares/auth");
 const Machines = require("../models/MachinesModel");
 
-router.delete("/:machine_id", async (req, res) => {
+router.delete("/:machine_id", auth, isVerifiedUser, isManager, async (req, res) => {
     try {
         const machine = await Machines.findOne({ machine_id: req.params.machine_id });
 

@@ -27,6 +27,7 @@ interface MachinesTableProps {
     onDeleteMachine: (id: string) => void;
     isLoading: boolean;
     error: string | null;
+    canManage: boolean;
 }
 
 interface TableColumn<T> {
@@ -48,6 +49,7 @@ const MachinesTable = ({
     onDeleteMachine,
     isLoading,
     error,
+    canManage,
 }: MachinesTableProps) => {
 
     const headerCheckboxRef =
@@ -72,7 +74,8 @@ const MachinesTable = ({
 
         // SELECT COLUMN
 
-        {
+        ...(canManage
+            ? [{
             key: "select",
             label: (
                 <input
@@ -92,7 +95,8 @@ const MachinesTable = ({
                 />
             ),
             align: "center",
-        },
+        } as TableColumn<MachineRow>]
+            : []),
 
         {
             key: "machine_id",
@@ -188,29 +192,33 @@ const MachinesTable = ({
                         <i className="fa-solid fa-eye"></i>
                     </button>
 
-                    <button
-                        type="button"
-                        className="machine-action-btn edit"
-                        onClick={() =>
-                            onEditMachine(row.machine_id)
-                        }
-                        title="Edit"
-                    >
-                        <i className="fa-solid fa-pen"></i>
-                    </button>
+                    {canManage && (
+                        <>
+                            <button
+                                type="button"
+                                className="machine-action-btn edit"
+                                onClick={() =>
+                                    onEditMachine(row.machine_id)
+                                }
+                                title="Edit"
+                            >
+                                <i className="fa-solid fa-pen"></i>
+                            </button>
 
-                    <button
-                        type="button"
-                        className="machine-action-btn delete"
-                        onClick={() =>
-                            onDeleteMachine(
-                                row.machine_id
-                            )
-                        }
-                        title="Delete"
-                    >
-                        <i className="fa-solid fa-trash"></i>
-                    </button>
+                            <button
+                                type="button"
+                                className="machine-action-btn delete"
+                                onClick={() =>
+                                    onDeleteMachine(
+                                        row.machine_id
+                                    )
+                                }
+                                title="Delete"
+                            >
+                                <i className="fa-solid fa-trash"></i>
+                            </button>
+                        </>
+                    )}
 
                 </div>
             ),

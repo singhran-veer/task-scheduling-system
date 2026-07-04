@@ -17,6 +17,12 @@ import useDeleteSelectedTasks from "../../utils/hooks/api/useDeleteSelectedTasks
 import useRunScheduler from "../../utils/hooks/api/useRunScheduler";
 import useCompleteTask from "../../utils/hooks/api/useCompleteTask";
 import type { TaskRow } from "../../common/Types/Interfaces";
+import { useAppSelector } from "../../utils/redux-toolkit/reduxHooks";
+import {
+    canAddDeleteTasks,
+    canEditTasks,
+    canOperateScheduler,
+} from "../../utils/auth/permissions";
 
 interface TaskSearchBy {
     taskIdOrName: string;
@@ -26,6 +32,10 @@ interface TaskSearchBy {
 }
 
 const TasksPage = () => {
+    const user = useAppSelector((state) => state.auth.user);
+    const canAddDelete = canAddDeleteTasks(user?.accountType);
+    const canEdit = canEditTasks(user?.accountType);
+    const canOperate = canOperateScheduler(user?.accountType);
     const [paginationInfo, setPaginationInfo] = useState({
         pageNumber: 1,
         totalPages: 1,
@@ -161,6 +171,8 @@ const TasksPage = () => {
                                 onAddTask={openAddTask}
                                 onRunScheduler={runScheduler}
                                 isRunningScheduler={isRunningScheduler}
+                                canAddDelete={canAddDelete}
+                                canOperate={canOperate}
                             />
                         </section>
                     </AnimatedComponent>
@@ -177,10 +189,12 @@ const TasksPage = () => {
 
                     <AnimatedComponent delay={0.3}>
                         <main className="white-bg p-4 rounded-lg shadow-md tasks-table-panel">
-                            <BulkActionsBar
-                                selectedCount={selectedCount}
-                                onDeleteSelected={() => setShowBulkDeleteConfirm(true)}
-                            />
+                            {canAddDelete && (
+                                <BulkActionsBar
+                                    selectedCount={selectedCount}
+                                    onDeleteSelected={() => setShowBulkDeleteConfirm(true)}
+                                />
+                            )}
 
                             <TasksTable
                                 tasks={tasks}
@@ -199,6 +213,9 @@ const TasksPage = () => {
                                 onCompleteTask={completeTask}
                                 isLoading={isLoading}
                                 error={error ?? null}
+                                canAddDelete={canAddDelete}
+                                canEdit={canEdit}
+                                canOperate={canOperate}
                             />
 
                             <Pagination
@@ -210,9 +227,9 @@ const TasksPage = () => {
                 </div>
             </div>
 
-            {isAddModalOpen && <AddTaskModal isOpen onClose={closeModals} />}
+            {canAddDelete && isAddModalOpen && <AddTaskModal isOpen onClose={closeModals} />}
 
-            {isEditModalOpen && (
+            {canEdit && isEditModalOpen && (
                 <EditTaskModal
                     isOpen
                     taskId={editingTaskId}

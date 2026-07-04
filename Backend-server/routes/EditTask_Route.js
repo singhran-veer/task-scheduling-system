@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const { auth, isVerifiedUser, isOperator } = require("../middlewares/auth");
 
 const Tasks = require("../models/TasksModel");
 
@@ -7,7 +8,7 @@ const Tasks = require("../models/TasksModel");
 // EDIT TASK
 // PUT /api/tasks/:task_id
 // ===============================
-router.put("/:task_id", async (req, res) => {
+router.put("/:task_id", auth, isVerifiedUser, isOperator, async (req, res) => {
     try {
         const { task_id } = req.params;
 

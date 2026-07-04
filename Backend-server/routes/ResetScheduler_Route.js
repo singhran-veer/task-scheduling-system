@@ -1,10 +1,11 @@
 const express = require("express");
 const router = express.Router();
+const { auth, isVerifiedUser, isManager } = require("../middlewares/auth");
 
 const Machines = require("../models/MachinesModel");
 const Tasks = require("../models/TasksModel");
 
-router.post("/reset", async (req, res) => {
+router.post("/reset", auth, isVerifiedUser, isManager, async (req, res) => {
     try {
         await Tasks.updateMany({}, {
             status: "pending",

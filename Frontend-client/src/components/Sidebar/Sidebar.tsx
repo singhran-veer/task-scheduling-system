@@ -6,6 +6,9 @@ import SidebarLink from "./SidebarLink";
 import { useAppDispatch, useAppSelector } from "../../utils/redux-toolkit/reduxHooks";
 import { setActiveBar as setActiveBarAction, setCompressSidebar as setCompressSidebarAction } from "../../utils/redux-toolkit/sidebarSlice";
 import Logo from "../../common/Logo/Logo";
+import { Link, useNavigate } from "react-router-dom";
+import { logout } from "../../utils/redux-toolkit/authSlice";
+import { notify } from "../../utils/functions/notify";
 
 
 const sidebarLinks = [
@@ -55,7 +58,9 @@ const Sidebar = () => {
     const compressSidebar = useAppSelector(
         (state) => state.sidebar.compressSidebar
     );
+    const { token, user } = useAppSelector((state) => state.auth);
     const dispatch = useAppDispatch();
+    const navigate = useNavigate();
     const sidebarRef = useRef<HTMLUListElement | null>(null);
     // const { isDarkMode, setIsDarkMode } = useContext(DarkModeContext);
 
@@ -109,6 +114,14 @@ const Sidebar = () => {
         }
     };
 
+    const handleLogout = () => {
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
+        dispatch(logout());
+        notify("success", "Logged out");
+        navigate("/login");
+    };
+
     return (
         <ul
             ref={sidebarRef}
@@ -157,6 +170,69 @@ const Sidebar = () => {
                         compressSidebar && "compressed"
                     }`}
                 >
+                    {token ? (
+                        <li className="sidebar-account">
+                            <div
+                                className={`account-summary ${
+                                    compressSidebar ? "lg:justify-center" : ""
+                                }`}
+                            >
+                                <img
+                                    src={user?.image}
+                                    alt={user?.firstName || "User"}
+                                    className="account-avatar"
+                                />
+                                <div
+                                    className={
+                                        compressSidebar ? "lg:hidden inline" : "inline"
+                                    }
+                                >
+                                    <p className="account-name">
+                                        {user?.firstName || "User"}
+                                    </p>
+                                    <p className="account-role">
+                                        {user?.accountType}
+                                    </p>
+                                </div>
+                            </div>
+                            <button
+                                type="button"
+                                className={`sidebar-auth-btn ${
+                                    compressSidebar ? "lg:justify-center" : ""
+                                }`}
+                                onClick={handleLogout}
+                                title="Logout"
+                            >
+                                <i className="fa-solid fa-right-from-bracket"></i>
+                                <span
+                                    className={
+                                        compressSidebar ? "lg:hidden inline" : "inline"
+                                    }
+                                >
+                                    Logout
+                                </span>
+                            </button>
+                        </li>
+                    ) : (
+                        <li className="sidebar-account">
+                            <Link
+                                to="/login"
+                                className={`sidebar-auth-btn ${
+                                    compressSidebar ? "lg:justify-center" : ""
+                                }`}
+                                onClick={() => setActiveBar(false)}
+                            >
+                                <i className="fa-solid fa-right-to-bracket"></i>
+                                <span
+                                    className={
+                                        compressSidebar ? "lg:hidden inline" : "inline"
+                                    }
+                                >
+                                    Login
+                                </span>
+                            </Link>
+                        </li>
+                    )}
                     {/* Dark Mode */}
                     {/* <li
 						className={`main-bg ${

@@ -1,9 +1,10 @@
 const express = require("express");
 const router = express.Router();
+const { auth, isVerifiedUser, isOperator } = require("../middlewares/auth");
 
 const Tasks = require("../models/TasksModel");
 
-router.delete("/bulk-delete", async (req, res) => {
+router.delete("/bulk-delete", auth, isVerifiedUser, isOperator, async (req, res) => {
     try {
         const { taskIds } = req.body;
 
@@ -18,21 +19,21 @@ router.delete("/bulk-delete", async (req, res) => {
             { task_id: 1, status: 1 }
         ).lean();
 
-        const runningOrCompletedTasks = tasks.filter(
-            (task) => task.status === "running" || task.status === "completed"
+        const runningTasks = tasks.filter(
+            (task) => task.status === "running"
         );
 
-        if (runningOrCompletedTasks.length > 0) {
+        if (runningTasks.length > 0) {
             return res.status(400).json({
                 message:
-                    "Running or completed tasks cannot be bulk deleted.",
-                blockedTaskIds: runningOrCompletedTasks.map((task) => task.task_id),
+                    "Running tasks cannot be bulk deleted. Complete them first.",
+                blockedTaskIds: runningTasks.map((task) => task.task_id),
             });
         }
 
         const result = await Tasks.deleteMany({
             task_id: { $in: taskIds },
-            status: { $nin: ["running", "completed"] },
+            status: { $ne: "running" },
         });
 
         return res.status(200).json({

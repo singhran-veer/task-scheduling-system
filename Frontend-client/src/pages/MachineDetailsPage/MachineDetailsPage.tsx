@@ -11,6 +11,8 @@ import EditMachineModal from "../../components/MachinesPage_Components/EditMachi
 import DeleteConfirmationModal from "../../components/DeleteConfirmationModal/DeleteConfirmationModal";
 import useDeleteMachine from "../../utils/hooks/api/useDeleteMachine";
 import { useNavigate } from "react-router-dom";
+import { useAppSelector } from "../../utils/redux-toolkit/reduxHooks";
+import { canManageResources } from "../../utils/auth/permissions";
 
 const formatDate = (date?: string) => {
     if (!date) return "N/A";
@@ -23,6 +25,8 @@ const MachineDetailsPage = () => {
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
     const { deleteMachine, isPending: isDeletingMachine } = useDeleteMachine();
+    const user = useAppSelector((state) => state.auth.user);
+    const canManage = canManageResources(user?.accountType);
 
     const { data, isLoading, error } =
         useGetMachineDetails(machineId || "");
@@ -73,24 +77,26 @@ const MachineDetailsPage = () => {
                                 </span>
                             </div>
 
-                            <div className="machine-summary-actions">
-                                <button
-                                    type="button"
-                                    className="main-btn blue-bg"
-                                    onClick={() => setIsEditModalOpen(true)}
-                                >
-                                    <i className="fa-solid fa-pen mr-2"></i>
-                                    Edit
-                                </button>
-                                <button
-                                    type="button"
-                                    className="main-btn red-bg"
-                                    onClick={() => setShowDeleteConfirm(true)}
-                                >
-                                    <i className="fa-solid fa-trash mr-2"></i>
-                                    Delete
-                                </button>
-                            </div>
+                            {canManage && (
+                                <div className="machine-summary-actions">
+                                    <button
+                                        type="button"
+                                        className="main-btn blue-bg"
+                                        onClick={() => setIsEditModalOpen(true)}
+                                    >
+                                        <i className="fa-solid fa-pen mr-2"></i>
+                                        Edit
+                                    </button>
+                                    <button
+                                        type="button"
+                                        className="main-btn red-bg"
+                                        onClick={() => setShowDeleteConfirm(true)}
+                                    >
+                                        <i className="fa-solid fa-trash mr-2"></i>
+                                        Delete
+                                    </button>
+                                </div>
+                            )}
                         </section>
 
                         <div className="machine-details-grid">
@@ -207,24 +213,28 @@ const MachineDetailsPage = () => {
                 </div>
             </div>
 
-            <EditMachineModal
-                isOpen={isEditModalOpen}
-                machineId={data.machine_id}
-                onClose={() => setIsEditModalOpen(false)}
-            />
+            {canManage && (
+                <>
+                    <EditMachineModal
+                        isOpen={isEditModalOpen}
+                        machineId={data.machine_id}
+                        onClose={() => setIsEditModalOpen(false)}
+                    />
 
-            <DeleteConfirmationModal
-                isOpen={showDeleteConfirm}
-                onClose={() => setShowDeleteConfirm(false)}
-                onConfirm={async () => {
-                    await deleteMachine(data.machine_id);
-                    navigate("/machines");
-                }}
-                title="Delete Machine"
-                message={`Are you sure you want to delete machine ${data.machine_id}?`}
-                confirmButtonText="Delete Machine"
-                isLoading={isDeletingMachine}
-            />
+                    <DeleteConfirmationModal
+                        isOpen={showDeleteConfirm}
+                        onClose={() => setShowDeleteConfirm(false)}
+                        onConfirm={async () => {
+                            await deleteMachine(data.machine_id);
+                            navigate("/machines");
+                        }}
+                        title="Delete Machine"
+                        message={`Are you sure you want to delete machine ${data.machine_id}?`}
+                        confirmButtonText="Delete Machine"
+                        isLoading={isDeletingMachine}
+                    />
+                </>
+            )}
         </AnimatedPage>
     );
 };

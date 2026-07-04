@@ -16,6 +16,9 @@ interface TasksTableProps {
     onCompleteTask: (id: string) => void;
     isLoading: boolean;
     error: string | null;
+    canAddDelete: boolean;
+    canEdit: boolean;
+    canOperate: boolean;
 }
 
 const TasksTable = ({
@@ -31,6 +34,9 @@ const TasksTable = ({
     onCompleteTask,
     isLoading,
     error,
+    canAddDelete,
+    canEdit,
+    canOperate,
 }: TasksTableProps) => {
 
     const headerCheckboxRef = useRef<HTMLInputElement>(null);
@@ -43,7 +49,8 @@ const TasksTable = ({
     }, [selectedCount, allSelected]);
 
     const columns: TableColumn<TaskRow>[] = [
-        {
+        ...(canAddDelete
+            ? [{
             key: "select",
             label: (
                 <input
@@ -61,7 +68,8 @@ const TasksTable = ({
                 />
             ),
             align: "center",
-        },
+        } as TableColumn<TaskRow>]
+            : []),
         { key: "task_id", label: "Task ID", align: "left" },
         { key: "task_name", label: "Task Name", align: "left" },
         { key: "task_type", label: "Type", align: "center" },
@@ -153,27 +161,35 @@ const TasksTable = ({
                     >
                         <i className="fa-solid fa-eye"></i>
                     </button>
-                    <button
-                        type="button"
-                        className="task-action-btn edit"
-                        onClick={(event) => {
-                            event.stopPropagation();
-                            onEditTask(row.task_id);
-                        }}
-                    >
-                        <i className="fa-solid fa-pen"></i>
-                    </button>
-                    <button
-                        type="button"
-                        className="task-action-btn delete"
-                        onClick={(event) => {
-                            event.stopPropagation();
-                            onDeleteTask(row.task_id);
-                        }}
-                    >
-                        <i className="fa-solid fa-trash"></i>
-                    </button>
-                    {row.status === "running" && (
+                    {(canEdit || canAddDelete) && (
+                        <>
+                            {canEdit && (
+                                <button
+                                    type="button"
+                                    className="task-action-btn edit"
+                                    onClick={(event) => {
+                                        event.stopPropagation();
+                                        onEditTask(row.task_id);
+                                    }}
+                                >
+                                    <i className="fa-solid fa-pen"></i>
+                                </button>
+                            )}
+                            {canAddDelete && (
+                                <button
+                                    type="button"
+                                    className="task-action-btn delete"
+                                    onClick={(event) => {
+                                        event.stopPropagation();
+                                        onDeleteTask(row.task_id);
+                                    }}
+                                >
+                                    <i className="fa-solid fa-trash"></i>
+                                </button>
+                            )}
+                        </>
+                    )}
+                    {canOperate && row.status === "running" && (
                         <button
                             type="button"
                             className="task-action-btn complete"

@@ -1,12 +1,13 @@
 const express = require("express");
 const router = express.Router();
+const { auth, isVerifiedUser, isOperator } = require("../middlewares/auth");
 
 const Machines = require("../models/MachinesModel");
 const Tasks = require("../models/TasksModel");
 const ActivityFeeds = require("../models/ActivityFeedsModel");
 const { calculateTrackedMinutes } = require("../utils/operatingTime");
 
-router.post("/run", async (req, res) => {
+router.post("/run", auth, isVerifiedUser, isOperator, async (req, res) => {
     try {
         const now = new Date();
 

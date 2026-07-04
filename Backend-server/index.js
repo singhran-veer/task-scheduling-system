@@ -1,5 +1,6 @@
 const express = require("express");
 const dotenv = require("dotenv");
+const cookieParser = require("cookie-parser");
 const connectDB = require("./utils/dbConnect");
 const startServerWithDB = require("./utils/serverManager");
 
@@ -16,6 +17,7 @@ const app = express();
 // MIDDLEWARES 
 // =======================
 app.use(express.json({ limit: "50mb" }));
+app.use(cookieParser());
 app.use(express.static("views/staticFiles"));
 app.use("/uploads", express.static("uploads"));
 
@@ -42,6 +44,9 @@ app.use((req, res, next) => {
 // =======================
 // IMPORT MACHINE–TASK ROUTES
 // =======================
+
+// AUTH ROUTES
+const authRoute = require("./routes/Auth_Route");
 
 // MACHINE ROUTES
 const addNewMachineRoute = require("./routes/AddNewMachine_Route");
@@ -86,6 +91,9 @@ app.get("/", (req, res) => {
 // =======================
 // API ROUTES
 // =======================
+
+// Auth
+app.use("/api/auth", authRoute);
 
 // Machines
 app.use("/api/machines", addNewMachineRoute);

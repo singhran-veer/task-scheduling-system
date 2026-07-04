@@ -4,12 +4,13 @@ const router = express.Router();
 // Import Models
 const Machines = require("../models/MachinesModel");
 const ActivityFeeds = require("../models/ActivityFeedsModel");
+const { auth, isVerifiedUser, isManager } = require("../middlewares/auth");
 
 // Import utilities (create this similar to driverIdGenerator)
 const generateMachineId = require("../utils/machineIdGenerator");
 
 // Add New Machine endpoint
-router.post("/", async (req, res) => {
+router.post("/", auth, isVerifiedUser, isManager, async (req, res) => {
     try {
         // Check request body
         if (!req.body || Object.keys(req.body).length === 0) {

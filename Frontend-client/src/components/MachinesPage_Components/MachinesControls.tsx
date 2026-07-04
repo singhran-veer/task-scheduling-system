@@ -3,9 +3,11 @@ import AnimatedButton from "../../common/Animations/AnimatedButton/AnimatedButto
 interface MachinesControlsProps {
     onAddMachine: () => void;
     onExportCsv?: () => void;
+    canManage: boolean;
 }
 
-const MachinesControls = ({ onAddMachine }: MachinesControlsProps) => {
+const MachinesControls = ({ onAddMachine, canManage }: MachinesControlsProps) => {
+    if (!canManage) return null;
 
     return (
         <div className="machines-header-actions">

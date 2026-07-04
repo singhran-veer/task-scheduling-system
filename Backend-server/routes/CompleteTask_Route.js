@@ -4,6 +4,7 @@ const router = express.Router();
 const Machines = require("../models/MachinesModel");
 const Tasks = require("../models/TasksModel");
 const ActivityFeeds = require("../models/ActivityFeedsModel");
+const { auth, isVerifiedUser, isOperator } = require("../middlewares/auth");
 const {
     calculateTrackedMinutes,
     calculateEfficiency,
@@ -133,7 +134,7 @@ const completeTaskHandler = async (req, res) => {
     }
 };
 
-router.patch("/:taskId/complete", completeTaskHandler);
-router.post("/:taskId/complete", completeTaskHandler);
+router.patch("/:taskId/complete", auth, isVerifiedUser, isOperator, completeTaskHandler);
+router.post("/:taskId/complete", auth, isVerifiedUser, isOperator, completeTaskHandler);
 
 module.exports = router;

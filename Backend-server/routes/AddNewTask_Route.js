@@ -4,12 +4,13 @@ const router = express.Router();
 // Import Models
 const Tasks = require("../models/TasksModel");
 const ActivityFeeds = require("../models/ActivityFeedsModel");
+const { auth, isVerifiedUser, isOperator } = require("../middlewares/auth");
 
 // Import utility (create similar to routeIdGenerator)
 const generateTaskId = require("../utils/taskIdGenerator");
 
 // Add New Task endpoint
-router.post("/", async (req, res) => {
+router.post("/", auth, isVerifiedUser, isOperator, async (req, res) => {
     try {
         // Check request body
         if (!req.body || Object.keys(req.body).length === 0) {

@@ -11,6 +11,12 @@ import { useState } from "react";
 import EditTaskModal from "../../components/TasksPage_Components/EditTaskModal";
 import DeleteConfirmationModal from "../../components/DeleteConfirmationModal/DeleteConfirmationModal";
 import useDeleteTask from "../../utils/hooks/api/useDeleteTask";
+import { useAppSelector } from "../../utils/redux-toolkit/reduxHooks";
+import {
+    canAddDeleteTasks,
+    canEditTasks,
+    canOperateScheduler,
+} from "../../utils/auth/permissions";
 
 const formatDateTime = (value?: string) => {
     if (!value) return "N/A";
@@ -27,6 +33,10 @@ const TaskDetailsPage = () => {
     const { deleteTask, isPending: isDeletingTask } = useDeleteTask();
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+    const user = useAppSelector((state) => state.auth.user);
+    const canAddDelete = canAddDeleteTasks(user?.accountType);
+    const canEdit = canEditTasks(user?.accountType);
+    const canOperate = canOperateScheduler(user?.accountType);
 
     const task = data || fallbackTask;
 
@@ -111,23 +121,31 @@ const TaskDetailsPage = () => {
                             </div>
 
                             <div className="task-summary-actions">
-                                <button
-                                    type="button"
-                                    className="main-btn blue-bg"
-                                    onClick={() => setIsEditModalOpen(true)}
-                                >
-                                    <i className="fa-solid fa-pen mr-2"></i>
-                                    Edit
-                                </button>
-                                <button
-                                    type="button"
-                                    className="main-btn red-bg"
-                                    onClick={() => setShowDeleteConfirm(true)}
-                                >
-                                    <i className="fa-solid fa-trash mr-2"></i>
-                                    Delete
-                                </button>
-                                {task.status === "running" && (
+                                {(canEdit || canAddDelete) && (
+                                    <>
+                                        {canEdit && (
+                                            <button
+                                                type="button"
+                                                className="main-btn blue-bg"
+                                                onClick={() => setIsEditModalOpen(true)}
+                                            >
+                                                <i className="fa-solid fa-pen mr-2"></i>
+                                                Edit
+                                            </button>
+                                        )}
+                                        {canAddDelete && (
+                                            <button
+                                                type="button"
+                                                className="main-btn red-bg"
+                                                onClick={() => setShowDeleteConfirm(true)}
+                                            >
+                                                <i className="fa-solid fa-trash mr-2"></i>
+                                                Delete
+                                            </button>
+                                        )}
+                                    </>
+                                )}
+                                {canOperate && task.status === "running" && (
                                     <button
                                         type="button"
                                         className="main-btn green-bg"
@@ -238,25 +256,33 @@ const TaskDetailsPage = () => {
                 </div>
             </div>
 
-            <EditTaskModal
-                isOpen={isEditModalOpen}
-                taskId={task.task_id}
-                task={task}
-                onClose={() => setIsEditModalOpen(false)}
-            />
+            {(canEdit || canAddDelete) && (
+                <>
+                    {canEdit && (
+                        <EditTaskModal
+                            isOpen={isEditModalOpen}
+                            taskId={task.task_id}
+                            task={task}
+                            onClose={() => setIsEditModalOpen(false)}
+                        />
+                    )}
 
-            <DeleteConfirmationModal
-                isOpen={showDeleteConfirm}
-                onClose={() => setShowDeleteConfirm(false)}
-                onConfirm={async () => {
-                    await deleteTask(task.task_id);
-                    navigate("/tasks");
-                }}
-                title="Delete Task"
-                message={`Are you sure you want to delete task ${task.task_id}?`}
-                confirmButtonText="Delete Task"
-                isLoading={isDeletingTask}
-            />
+                    {canAddDelete && (
+                        <DeleteConfirmationModal
+                            isOpen={showDeleteConfirm}
+                            onClose={() => setShowDeleteConfirm(false)}
+                            onConfirm={async () => {
+                                await deleteTask(task.task_id);
+                                navigate("/tasks");
+                            }}
+                            title="Delete Task"
+                            message={`Are you sure you want to delete task ${task.task_id}?`}
+                            confirmButtonText="Delete Task"
+                            isLoading={isDeletingTask}
+                        />
+                    )}
+                </>
+            )}
         </AnimatedPage>
     );
 };
