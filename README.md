@@ -3,7 +3,7 @@
 Full-stack manufacturing scheduling system for managing machines, production tasks, and scheduler activity in a single interface. The project is built around a plant-floor workflow where tasks are assigned to compatible machines based on machine type, capabilities, availability, and scheduling status.
 
 ##View live:
-Frontend:https://task-scheduling-system-zb2n-kc4o7h901.vercel.app/
+Frontend:[https://task-scheduling-system-t4my-1au4nj7c8.vercel.app/)](https://task-scheduling-system-t4my-1au4nj7c8.vercel.app/)
 Backend: https://task-scheduling-system-ec5m-p8olr5k9f.vercel.app/
 
 ## Overview
