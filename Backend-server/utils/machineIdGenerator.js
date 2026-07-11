@@ -1,21 +1,25 @@
 const Machines = require("../models/MachinesModel");
 
 async function generateMachineId() {
-    const lastMachine = await Machines.findOne({})
-        .sort({ created_at: -1 })
-        .lean();
+    const machines = await Machines.find(
+        { machine_id: /^MC\d+$/ },
+        { machine_id: 1, _id: 0 }
+    ).lean();
 
-    if (!lastMachine || !lastMachine.machine_id) {
-        return "MC001";
+    const maxNumber = machines.reduce((max, machine) => {
+        const number = parseInt(machine.machine_id.replace("MC", ""), 10);
+        return Number.isNaN(number) ? max : Math.max(max, number);
+    }, 0);
+
+    let nextNumber = maxNumber + 1;
+    let nextMachineId = `MC${String(nextNumber).padStart(3, "0")}`;
+
+    while (await Machines.exists({ machine_id: nextMachineId })) {
+        nextNumber += 1;
+        nextMachineId = `MC${String(nextNumber).padStart(3, "0")}`;
     }
 
-    const lastNumber = parseInt(
-        lastMachine.machine_id.replace("MC", "")
-    );
-
-    const newNumber = lastNumber + 1;
-
-    return `MC${String(newNumber).padStart(3, "0")}`;
+    return nextMachineId;
 }
 
 module.exports = generateMachineId;

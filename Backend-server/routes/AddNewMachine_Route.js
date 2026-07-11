@@ -64,8 +64,8 @@ router.post("/", auth, isVerifiedUser, isManager, async (req, res) => {
 
         // Create new machine
         const newMachine = new Machines({
-            machine_id: machineId,
             ...data,
+            machine_id: machineId,
         });
 
         const savedMachine = await newMachine.save();
@@ -73,8 +73,15 @@ router.post("/", auth, isVerifiedUser, isManager, async (req, res) => {
         // Add Activity Feed entry
         try {
             const newActivityFeed = new ActivityFeeds({
-                machine_id: savedMachine.machine_id,
-                status: "created",
+                entity_type: "machine",
+                entity_id: savedMachine.machine_id,
+                action: "machine_created",
+                related_machine_id: savedMachine.machine_id,
+                details: {
+                    machine_name: savedMachine.machine_name,
+                    machine_type: savedMachine.machine_type,
+                    location: savedMachine.location,
+                },
                 action_time: new Date(),
             });
             await newActivityFeed.save();

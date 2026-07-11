@@ -61,8 +61,8 @@ router.post("/", auth, isVerifiedUser, isOperator, async (req, res) => {
 
         // Create new task
         const newTask = new Tasks({
-            task_id: taskId,
             ...data,
+            task_id: taskId,
             status: "pending",
         });
 
@@ -71,8 +71,15 @@ router.post("/", auth, isVerifiedUser, isOperator, async (req, res) => {
         // Update activity feed
         try {
             const newActivityFeed = new ActivityFeeds({
-                task_id: taskId,
-                status: "created",
+                entity_type: "task",
+                entity_id: savedTask.task_id,
+                action: "task_created",
+                related_task_id: savedTask.task_id,
+                details: {
+                    task_name: savedTask.task_name,
+                    task_type: savedTask.task_type,
+                    priority: savedTask.priority,
+                },
                 action_time: new Date(),
             });
             await newActivityFeed.save();
