@@ -3,19 +3,42 @@ import axiosInstance from "./axios-utils";
 import { notify } from "../../functions/notify";
 import type { TaskForm } from "../../../common/Types/Interfaces";
 
+interface AddTaskResponse {
+    message: string;
+    task: {
+        task_id: string;
+        task_name: string;
+        task_type: string;
+        priority: number;
+        duration: number;
+        status: string;
+        created_at: string;
+    };
+}
+
 const useAddNewTask = () => {
     const queryClient = useQueryClient();
 
-    const { mutateAsync, isPending, error, data } = useMutation({
+    const { mutateAsync, isPending, error, data } = useMutation<
+        AddTaskResponse,
+        Error,
+        TaskForm
+    >({
         mutationFn: async (taskData: TaskForm) => {
-            const response = await axiosInstance.post("/api/tasks", taskData);
+            const response = await axiosInstance.post<AddTaskResponse>(
+                "/api/tasks",
+                taskData
+            );
             return response.data;
         },
-        onSuccess: () => {
-            notify("success", "Task added successfully");
+        onSuccess: (response) => {
+            notify(
+                "success",
+                `Task ${response.task.task_id} added successfully`
+            );
             queryClient.invalidateQueries({ queryKey: ["tasks"] });
             queryClient.invalidateQueries({ queryKey: ["dashboard"] });
-            queryClient.invalidateQueries({ queryKey: ["activity"] });
+            queryClient.invalidateQueries({ queryKey: ["activity-timeline"] });
         },
         onError: (error: any) => {
             notify(

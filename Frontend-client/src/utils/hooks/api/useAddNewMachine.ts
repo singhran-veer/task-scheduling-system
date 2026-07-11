@@ -28,8 +28,13 @@ const useAddNewMachine = () => {
         Error,
         MachineForm
     >({
-        mutationFn: (machineData: MachineForm) =>
-            axiosInstance.post("/api/machines", machineData),
+        mutationFn: async (machineData: MachineForm) => {
+            const response = await axiosInstance.post<AddMachineResponse>(
+                "/api/machines",
+                machineData
+            );
+            return response.data;
+        },
 
         onSuccess: (response) => {
             notify(
@@ -43,6 +48,7 @@ const useAddNewMachine = () => {
             // Refresh dashboard / analytics if needed
             queryClient.invalidateQueries({ queryKey: ["dashboard"] });
             queryClient.invalidateQueries({ queryKey: ["analytics"] });
+            queryClient.invalidateQueries({ queryKey: ["activity-timeline"] });
         },
 
         onError: (error: any) => {
