@@ -5,8 +5,7 @@ const Schema = mongoose.Schema;
 const taskSchema = new Schema({
     task_id: { 
         type: String, 
-        unique: true, 
-        required: true 
+        unique: true
     }, // Custom ID: TS001, TS002, etc.
 
     task_name: { 

@@ -5,8 +5,7 @@ const Schema = mongoose.Schema;
 const machineSchema = new Schema({
     machine_id: { 
         type: String, 
-        unique: true, 
-        required: true 
+        unique: true
     }, // Custom ID: MC001, MC002, etc.
 
     machine_name: { 
