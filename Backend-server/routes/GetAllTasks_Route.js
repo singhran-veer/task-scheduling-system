@@ -4,6 +4,7 @@ const router = express.Router();
 // Import Models
 const Tasks = require("../models/TasksModel");
 const Machines = require("../models/MachinesModel");
+const { processDueTasks } = require("../utils/serverManager");
 
 /*
 GET All Tasks
@@ -11,6 +12,8 @@ GET All Tasks
 */
 router.get("/", async (req, res) => {
     try {
+        await processDueTasks();
+
         const page = parseInt(req.query.page) || 1;
         const limit = parseInt(req.query.limit) || 15;
         const skip = (page - 1) * limit;
@@ -158,6 +161,8 @@ GET Tasks Summary
 */
 router.get("/summary", async (req, res) => {
     try {
+        await processDueTasks();
+
         const tasks = await Tasks.find(
             {},
             {

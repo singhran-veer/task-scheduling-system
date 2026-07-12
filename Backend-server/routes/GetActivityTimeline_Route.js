@@ -2,9 +2,12 @@ const express = require("express");
 const router = express.Router();
 
 const ActivityFeeds = require("../models/ActivityFeedsModel");
+const { processDueTasks } = require("../utils/serverManager");
 
 router.get("/", async (req, res) => {
     try {
+        await processDueTasks();
+
         const { entity_type, entity_id, limit } = req.query;
 
         const filter = {};

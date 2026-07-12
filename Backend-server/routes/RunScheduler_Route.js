@@ -6,9 +6,12 @@ const Machines = require("../models/MachinesModel");
 const Tasks = require("../models/TasksModel");
 const ActivityFeeds = require("../models/ActivityFeedsModel");
 const { calculateTrackedMinutes } = require("../utils/operatingTime");
+const { processDueTasks } = require("../utils/serverManager");
 
 router.post("/run", auth, isVerifiedUser, isOperator, async (req, res) => {
     try {
+        await processDueTasks();
+
         const now = new Date();
 
         // Get all pending tasks sorted by highest priority first

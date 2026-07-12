@@ -7,12 +7,15 @@ const {
     calculateEfficiency,
     getTrackedMinutesByStatus,
 } = require("../utils/operatingTime");
+const { processDueTasks } = require("../utils/serverManager");
 
 // GET All Machines
 // /api/machines?page=1&limit=15&machineIdOrName=MC001&status=idle&machineType=CNC
 
 router.get("/", async (req, res) => {
     try {
+        await processDueTasks();
+
         const now = new Date();
         // Pagination
         const page = parseInt(req.query.page) || 1;

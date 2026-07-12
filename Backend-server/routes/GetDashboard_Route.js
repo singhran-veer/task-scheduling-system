@@ -7,9 +7,12 @@ const {
     calculateTrackedMinutes,
     calculateEfficiency,
 } = require("../utils/operatingTime");
+const { processDueTasks } = require("../utils/serverManager");
 
 router.get("/", async (req, res) => {
     try {
+        await processDueTasks();
+
         const now = new Date();
 
         // =========================
